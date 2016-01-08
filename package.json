@@ -1,6 +1,6 @@
 {
   "name": "nci-projects-reloader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "On disk changes projects reloader for nci",
   "main": "lib/index.js",
   "scripts": {
