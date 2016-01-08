@@ -1,0 +1,28 @@
+{
+  "name": "nci-projects-reloader",
+  "version": "0.1.0",
+  "description": "On disk changes projects reloader for nci",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/node-ci/nci-projects-reloader.git"
+  },
+  "keywords": [
+    "nciplugin",
+    "reload",
+    "config",
+    "project"
+  ],
+  "author": "Oleg Korobenko <oleg.korobenko@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/node-ci/nci-projects-reloader/issues"
+  },
+  "homepage": "https://github.com/node-ci/nci-projects-reloader",
+  "dependencies": {
+    "chokidar": "1.0.2"
+  }
+}
