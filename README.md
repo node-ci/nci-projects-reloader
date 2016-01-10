@@ -2,6 +2,14 @@
 
 On disk changes projects reloader for nci for [nci](https://github.com/node-ci/nci).
 
+## Installation
+
+```sh
+npm install nci-projects-reloader
+```
+
+## Usage
+
 To enable add this plugin to the `plugins` section at server config:
 
 ```json
