@@ -4,7 +4,8 @@
   "description": "On disk changes projects reloader for nci",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "jshint ./",
+    "test": "mocha --bail --reporter=spec"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,12 @@
   },
   "peerDependencies": {
     "nci": "0.9.x || 0.10.x || 1.0.x"
+  },
+  "devDependencies": {
+    "expect.js": "0.3.1",
+    "jshint": "2.4.4",
+    "mocha": "2.0.1",
+    "proxyquire": "1.7.4",
+    "sinon": "1.17.2"
   }
 }
