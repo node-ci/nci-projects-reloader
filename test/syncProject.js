@@ -2,34 +2,23 @@
 
 var expect = require('expect.js'),
 	sinon = require('sinon'),
-	proxyquire = require('proxyquire').noCallThru();
+	helpers = require('./helpers');
 
 describe('sync project function', function() {
 
-	var watcherSpy = {
-		on: sinon.stub()
-	};
-
-	var module = proxyquire('../lib/index', {
-		chokidar: {
-			watch: sinon.stub().returns(watcherSpy)
-		}
-	});
-
-	var app = {
-		lib: {logger: function() {
-			return {log: sinon.stub()};
-		}},
-		config: {paths: {projects: '/tmp'}},
-		projects: {}
-	};
-
-	var syncProject;
+	var watcherOnSpy = sinon.stub(),
+		register = helpers.getRegister({
+			watchSpy: sinon.stub().returns({
+				on: watcherOnSpy
+			})
+		}),
+		app = helpers.createApp({projectsPath: '/tmp'}),
+		syncProject;
 
 	before(function() {
-		module.register(app);
+		register(app);
 
-		syncProject = watcherSpy.on.getCall(0).args[1];
+		syncProject = watcherOnSpy.getCall(0).args[1];
 	});
 
 	describe('main', function() {
@@ -43,8 +32,10 @@ describe('sync project function', function() {
 	});
 
 	describe('unload loaded project', function() {
+		var project = {};
+
 		before(function() {
-			app.projects.get = sinon.stub().returns({});
+			app.projects.get = sinon.stub().returns(project);
 			app.projects.unload = sinon.stub();
 
 			syncProject('/tmp/test_project/config.yaml', null);
@@ -55,20 +46,22 @@ describe('sync project function', function() {
 			delete app.projects.unload;
 		});
 
-		it('call project get', function() {
+		it('should call projects get', function() {
 			expect(app.projects.get.calledOnce).equal(true);
 			expect(app.projects.get.getCall(0).args[0]).equal('test_project');
 		});
 
-		it('unload loaded project', function() {
+		it('should call unload project', function() {
 			expect(app.projects.unload.calledOnce).equal(true);
 			expect(app.projects.unload.getCall(0).args[0]).equal('test_project');
 		});
 	});
 
 	describe('do not unload not loaded project', function() {
+		var project = null;
+
 		before(function() {
-			app.projects.get = sinon.stub().returns(null);
+			app.projects.get = sinon.stub().returns(project);
 			app.projects.unload = sinon.stub();
 
 			syncProject('/tmp/test_project/config.yaml', null);
@@ -79,14 +72,54 @@ describe('sync project function', function() {
 			delete app.projects.unload;
 		});
 
-		it('call project get', function() {
+		it('should call projects get', function() {
 			expect(app.projects.get.calledOnce).equal(true);
 			expect(app.projects.get.getCall(0).args[0]).equal('test_project');
 		});
 
-		it('do not unload loaded project', function() {
+		it('should not call unload project', function() {
 			expect(app.projects.unload.called).equal(false);
 		});
 	});
 
+	describe('load project when file info is presented', function() {
+		var fileInfo = {};
+
+		before(function() {
+			app.projects.get = sinon.stub().returns(null);
+			app.projects.load = sinon.stub();
+
+			syncProject('/tmp/test_project/config.yaml', fileInfo);
+		});
+
+		after(function() {
+			delete app.projects.get;
+			delete app.projects.load;
+		});
+
+		it('sholuld call projects load', function() {
+			expect(app.projects.load.calledOnce).equal(true);
+			expect(app.projects.load.getCall(0).args[0]).equal('test_project');
+		});
+	});
+
+	describe('do not load project when file info is not presented', function() {
+		var fileInfo = null;
+
+		before(function() {
+			app.projects.get = sinon.stub().returns(null);
+			app.projects.load = sinon.stub();
+
+			syncProject('/tmp/test_project/config.yaml', fileInfo);
+		});
+
+		after(function() {
+			delete app.projects.get;
+			delete app.projects.load;
+		});
+
+		it('should not call projects load', function() {
+			expect(app.projects.load.called).equal(false);
+		});
+	});
 });
