@@ -84,22 +84,13 @@ describe('watcher', function() {
 
 	// coz file watcher need some time to detect file change we need some
 	// helper for waiting for it
-	var spyCalledOnceDelay = 50;
-	var spyCalledOnceTime = 0;
-	// remember first time of detecting changes for using it in test below
-	var spyCalledOnceFirstTime;
 	var waitForSpyCalledOnce = function(spy, callback) {
 		if (spy.calledOnce) {
-			if (!spyCalledOnceFirstTime) {
-				spyCalledOnceFirstTime = spyCalledOnceTime;
-			}
-			spyCalledOnceTime = 0;
 			callback();
 		} else {
-			spyCalledOnceTime += spyCalledOnceDelay;
 			setTimeout(function() {
 				waitForSpyCalledOnce(spy, callback);
-			}, spyCalledOnceDelay);
+			}, 50);
 		}
 	};
 
@@ -268,25 +259,22 @@ describe('watcher', function() {
 		});
 
 		before(function(done) {
+			resetWatcherSpies();
+
 			fs.unlink(
 				projectConfigPath,
-				done
+				createWaitForSpyCalledOnceCallback(watcherRemoveSpy, done)
 			);
 		});
 
 		before(function(done) {
 			resetWatcherSpies();
 
-			// + 100 ms to be sure that we wait enough
-			var timeout = spyCalledOnceFirstTime + 100;
-
-			fs.writeFile(projectConfigPath, 'some text', function(err) {
-				if (err) {
-					done(err);
-				} else {
-					setTimeout(done, timeout);
-				}
-			});
+			fs.writeFile(
+				projectConfigPath,
+				'some text',
+				createWaitForSpyCalledOnceCallback(watcherAddSpy, done)
+			);
 		});
 
 		after(function(done) {
@@ -297,11 +285,17 @@ describe('watcher', function() {
 			fs.rmdir(projectPath, done);
 		});
 
-		it('should not emit any events', function() {
-			expect(watcherAddSpy.called).equal(false);
+		it('should emit add event', function() {
+			expect(watcherAddSpy.calledOnce).equal(true);
 			expect(watcherChangeSpy.called).equal(false);
 			expect(watcherRemoveSpy.called).equal(false);
 			expect(watcherErrorSpy.called).equal(false);
+		});
+
+		it('should pass file name and info to event handler', function() {
+			var args = watcherAddSpy.getCall(0).args;
+			expect(args[0]).equal(projectConfigPath);
+			expect(args[1]).ok();
 		});
 	});
 
