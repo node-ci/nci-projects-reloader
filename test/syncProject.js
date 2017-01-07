@@ -2,7 +2,9 @@
 
 var expect = require('expect.js'),
 	sinon = require('sinon'),
-	helpers = require('./helpers');
+	helpers = require('./helpers'),
+	os = require('os'),
+	path = require('path');
 
 describe('sync project function', function() {
 
@@ -12,7 +14,9 @@ describe('sync project function', function() {
 				on: watcherOnSpy
 			})
 		}),
-		app = helpers.createApp({projectsPath: '/tmp'}),
+		projectsPath = os.tmpdir(),
+		projectConfigPath = path.join(projectsPath, 'test_project', 'config.yaml'),
+		app = helpers.createApp({projectsPath: projectsPath}),
 		syncProject;
 
 	before(function() {
@@ -31,14 +35,14 @@ describe('sync project function', function() {
 		});
 	});
 
-	describe('unload loaded project', function() {
+	describe('with already loaded project', function() {
 		var project = {};
 
 		before(function() {
 			app.projects.get = sinon.stub().returns(project);
 			app.projects.unload = sinon.stub();
 
-			syncProject('/tmp/test_project/config.yaml', null);
+			syncProject(projectConfigPath, null);
 		});
 
 		after(function() {
@@ -57,14 +61,14 @@ describe('sync project function', function() {
 		});
 	});
 
-	describe('do not unload not loaded project', function() {
+	describe('with not yet loaded project', function() {
 		var project = null;
 
 		before(function() {
 			app.projects.get = sinon.stub().returns(project);
 			app.projects.unload = sinon.stub();
 
-			syncProject('/tmp/test_project/config.yaml', null);
+			syncProject(projectConfigPath, null);
 		});
 
 		after(function() {
@@ -82,14 +86,14 @@ describe('sync project function', function() {
 		});
 	});
 
-	describe('load project when file info is presented', function() {
+	describe('with file info', function() {
 		var fileInfo = {};
 
 		before(function() {
 			app.projects.get = sinon.stub().returns(null);
 			app.projects.load = sinon.stub();
 
-			syncProject('/tmp/test_project/config.yaml', fileInfo);
+			syncProject(projectConfigPath, fileInfo);
 		});
 
 		after(function() {
@@ -103,14 +107,14 @@ describe('sync project function', function() {
 		});
 	});
 
-	describe('do not load project when file info is not presented', function() {
+	describe('without file info', function() {
 		var fileInfo = null;
 
 		before(function() {
 			app.projects.get = sinon.stub().returns(null);
 			app.projects.load = sinon.stub();
 
-			syncProject('/tmp/test_project/config.yaml', fileInfo);
+			syncProject(projectConfigPath, fileInfo);
 		});
 
 		after(function() {

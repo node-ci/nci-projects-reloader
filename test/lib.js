@@ -4,7 +4,8 @@ var expect = require('expect.js'),
 	sinon = require('sinon'),
 	libModule = require('../lib'),
 	helpers = require('./helpers'),
-	path = require('path');
+	path = require('path'),
+	os = require('os');
 
 describe('lib', function() {
 
@@ -25,7 +26,7 @@ describe('lib', function() {
 				on: watcherOnSpy
 			})
 		}),
-		projectsPath = '/tmp',
+		projectsPath = os.tmpdir(),
 		app = helpers.createApp({projectsPath: projectsPath}),
 		syncProject;
 
