@@ -57,7 +57,9 @@ describe('sync project function', function() {
 
 		it('should call unload project', function() {
 			expect(app.projects.unload.calledOnce).equal(true);
-			expect(app.projects.unload.getCall(0).args[0]).equal('test_project');
+			expect(app.projects.unload.getCall(0).args[0]).eql({
+				name: 'test_project'
+			});
 		});
 	});
 
@@ -103,7 +105,9 @@ describe('sync project function', function() {
 
 		it('sholuld call projects load', function() {
 			expect(app.projects.load.calledOnce).equal(true);
-			expect(app.projects.load.getCall(0).args[0]).equal('test_project');
+			expect(app.projects.load.getCall(0).args[0]).eql({
+				name: 'test_project'
+			});
 		});
 	});
 
