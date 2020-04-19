@@ -2,3 +2,5 @@
 test
 .jshintrc
 .jshintignore
+.travis.yml
+
