@@ -7,6 +7,11 @@ On disk changes projects reloader for nci for [nci](https://github.com/node-ci/n
 [![Known Vulnerabilities](https://snyk.io/test/npm/nci-projects-reloader/badge.svg)](https://snyk.io/test/npm/nci-projects-reloader)
 
 
+## Node.js compatibility
+
+This plugin requires node.js >= 10 to work.
+
+
 ## Installation
 
 ```sh
