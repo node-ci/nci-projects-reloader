@@ -2,6 +2,11 @@
 
 On disk changes projects reloader for nci for [nci](https://github.com/node-ci/nci).
 
+[![Npm version](https://img.shields.io/npm/v/nci-projects-reloader.svg)](https://www.npmjs.org/package/nci-projects-reloader)
+[![Build Status](https://travis-ci.org/node-ci/nci-projects-reloader.svg?branch=master)](https://travis-ci.org/node-ci/nci-projects-reloader)
+[![Known Vulnerabilities](https://snyk.io/test/npm/nci-projects-reloader/badge.svg)](https://snyk.io/test/npm/nci-projects-reloader)
+
+
 ## Installation
 
 ```sh
